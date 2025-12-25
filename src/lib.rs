@@ -60,7 +60,7 @@ impl Tailscale {
     }
 
     /// Shut down the server
-    fn close(&mut self) -> Result<(), ()> {
+    pub fn close(&self) -> Result<(), ()> {
         let ret = unsafe { tailscale_close(self.inner) };
         if ret != 0 {
             Err(())
