@@ -101,6 +101,13 @@ extern "C" {
         localhost_port: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
+#[cfg(target_os = "android")]
+extern "C" {
+    pub fn tailscale_register_android_interface(
+        jvm: *mut ::std::os::raw::c_void,
+        app_ctx: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
+}
 extern "C" {
     pub fn tailscale_errmsg(
         sd: tailscale,

@@ -39,8 +39,6 @@ fn main() {
             "dragonfly"
         } else if target.contains("freebsd") {
             "freebsd"
-        } else if target.contains("dragonfly") {
-            "dragonfly"
         } else if target.contains("illumos") {
             "illumos"
         } else if target.contains("ios") {
@@ -129,16 +127,21 @@ fn main() {
         cmd.env("CXX", format_compiler_command(cxx_compiler.to_command()));
     }
 
+    let (build_mode, out_name, link_type) = if cfg!(feature = "static") {
+        ("-buildmode=c-archive", "libtailscale.a", "static")
+    } else {
+        ("-buildmode=c-shared", "libtailscale.so", "dylib")
+    };
     let status = cmd
-        .args(["build", "-x", "-buildmode=c-archive", "-o"])
-        .arg(out_dir.join("libtailscale.a"))
+        .args(["build", "-x", build_mode, "-o"])
+        .arg(out_dir.join(out_name))
         .current_dir("libtailscale")
         .status()
         .expect("go build command failed to start");
     assert!(status.success());
 
     println!("cargo:rustc-link-search=native={}", out_dir.display());
-    println!("cargo:rustc-link-lib=static=tailscale");
+    println!("cargo:rustc-link-lib={link_type}=tailscale");
 
     if target.contains("apple-") {
         println!("cargo:rustc-link-lib=framework=CoreFoundation");
