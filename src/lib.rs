@@ -390,6 +390,11 @@ impl FusedIterator for Incoming<'_> {}
 pub fn register_android_interface(
     env: *mut std::ffi::c_void,
     app_ctx: *mut std::ffi::c_void,
-) -> bool {
-    unsafe { tailscale_register_android_interface(env, app_ctx) == 0 }
+) -> Result<(), ()> {
+    let ret = unsafe { tailscale_register_android_interface(env, app_ctx) };
+    if ret != 0 {
+        Err(())
+    } else {
+        Ok(())
+    }
 }
