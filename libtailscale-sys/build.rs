@@ -127,6 +127,8 @@ fn main() {
         cmd.env("CXX", format_compiler_command(cxx_compiler.to_command()));
     }
 
+    cmd.env("CGO_CFLAGS", "-Wno-error=unused-parameter");
+
     let (build_mode, out_name, link_type) = if cfg!(feature = "static") {
         ("-buildmode=c-archive", "libtailscale.a", "static")
     } else {
