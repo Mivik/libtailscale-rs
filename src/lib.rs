@@ -144,7 +144,7 @@ impl Tailscale {
     /// The result is typically an IPv4 and an IPv6 address, but may be empty
     /// or contain any number of addresses.
     pub fn get_ips(&self) -> io::Result<Vec<IpAddr>> {
-        let mut buf = [0i8; 1024];
+        let mut buf = [0; 1024];
         let ret = unsafe { tailscale_getips(self.inner, buf.as_mut_ptr(), buf.len()) };
         if ret != 0 {
             Err(self.last_error(ret))
@@ -327,7 +327,7 @@ impl<'a> Listener<'a> {
     /// The `conn` should be a raw file descriptor obtained from [`Listener::accept_raw`]
     /// or the raw fd of a `TcpStream` returned by [`Listener::accept`].
     pub fn get_remote_addr(&self, conn: tailscale_conn) -> io::Result<IpAddr> {
-        let mut buf = [0i8; 256];
+        let mut buf = [0; 256];
         let ret =
             unsafe { tailscale_getremoteaddr(self.listener, conn, buf.as_mut_ptr(), buf.len()) };
         if ret != 0 {
